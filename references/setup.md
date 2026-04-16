@@ -53,7 +53,7 @@ lark-cli base +base-create \
 lark-cli base +table-create \
   --base-token <base_token> \
   --name "记录表" \
-  --fields '[{"name":"记录标题","type":"text"},{"name":"来源","type":"select","multiple":false,"options":[{"name":"飞书对话"},{"name":"终端"},{"name":"录音"}]},{"name":"处理状态","type":"select","multiple":false,"options":[{"name":"原始"},{"name":"已整理"}]},{"name":"标签","type":"select","multiple":true,"options":[{"name":"待办"},{"name":"灵感"},{"name":"其他"},{"name":"AI"},{"name":"社群"},{"name":"内容创作"},{"name":"线下"}]},{"name":"详细内容","type":"text"},{"name":"创建日期","type":"datetime","style":{"format":"yyyy-MM-dd"}},{"name":"截止日期","type":"datetime","style":{"format":"yyyy-MM-dd"}},{"name":"完成状态","type":"select","multiple":false,"options":[{"name":"未完成"},{"name":"已完成"}]},{"name":"关联文档","type":"text","style":{"type":"url"}}]'
+  --fields '[{"name":"记录标题","type":"text"},{"name":"来源","type":"select","multiple":false,"options":[{"name":"飞书对话"},{"name":"终端"},{"name":"录音"}]},{"name":"标签","type":"select","multiple":true,"options":[{"name":"待办"},{"name":"灵感"},{"name":"其他"},{"name":"AI"},{"name":"社群"},{"name":"内容创作"},{"name":"线下"}]},{"name":"详细内容","type":"text"},{"name":"创建日期","type":"datetime","style":{"format":"yyyy-MM-dd"}},{"name":"截止日期","type":"datetime","style":{"format":"yyyy-MM-dd"}},{"name":"完成状态","type":"select","multiple":false,"options":[{"name":"未完成"},{"name":"已完成"}]},{"name":"关联文档","type":"text","style":{"type":"url"}}]'
 ```
 
 记录返回的 `table_id` 和默认视图 `view_id`。
@@ -69,7 +69,13 @@ lark-cli base +table-create \
 
 记录返回的 `article_table_id`。
 
-### Step 5: 保存配置
+### Step 5: 创建录音文件目录
+
+```bash
+mkdir -p ~/.care-assistant/recordings
+```
+
+### Step 6: 保存配置
 
 将配置写入 `~/.care-assistant/config.json`：
 
@@ -87,7 +93,7 @@ cat > ~/.care-assistant/config.json << 'EOF'
 EOF
 ```
 
-### Step 6: 反馈
+### Step 7: 反馈
 
 告知用户：
 - 多维表格已创建，附上访问链接（`https://my.feishu.cn/base/<base_token>`）
