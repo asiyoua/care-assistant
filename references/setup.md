@@ -53,7 +53,7 @@ lark-cli base +base-create \
 lark-cli base +table-create \
   --base-token <base_token> \
   --name "记录表" \
-  --fields '[{"name":"记录标题","type":"text"},{"name":"来源","type":"select","multiple":false,"options":[{"name":"飞书对话"},{"name":"终端"},{"name":"录音"}]},{"name":"处理状态","type":"select","multiple":false,"options":[{"name":"原始"},{"name":"已整理"}]},{"name":"标签","type":"select","multiple":true,"options":[{"name":"待办"},{"name":"灵感"},{"name":"其他"},{"name":"AI"},{"name":"社群"},{"name":"内容创作"},{"name":"线下"}]},{"name":"详细内容","type":"text"},{"name":"待办开始时间","type":"datetime","style":{"format":"yyyy-MM-dd HH:mm"}},{"name":"待办截止时间","type":"datetime","style":{"format":"yyyy-MM-dd HH:mm"}},{"name":"完成状态","type":"select","multiple":false,"options":[{"name":"未完成"},{"name":"已完成"}]},{"name":"来源文件","type":"text"}]'
+  --fields '[{"name":"记录标题","type":"text"},{"name":"来源","type":"select","multiple":false,"options":[{"name":"飞书对话"},{"name":"终端"},{"name":"录音"}]},{"name":"处理状态","type":"select","multiple":false,"options":[{"name":"原始"},{"name":"已整理"}]},{"name":"标签","type":"select","multiple":true,"options":[{"name":"待办"},{"name":"灵感"},{"name":"其他"},{"name":"AI"},{"name":"社群"},{"name":"内容创作"},{"name":"线下"}]},{"name":"详细内容","type":"text"},{"name":"创建日期","type":"datetime","style":{"format":"yyyy-MM-dd"}},{"name":"截止日期","type":"datetime","style":{"format":"yyyy-MM-dd"}},{"name":"完成状态","type":"select","multiple":false,"options":[{"name":"未完成"},{"name":"已完成"}]},{"name":"关联文档","type":"text","style":{"type":"url"}}]'
 ```
 
 记录返回的 `table_id` 和默认视图 `view_id`。
