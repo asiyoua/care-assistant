@@ -1,6 +1,6 @@
 # CARE 助理 — 关心你的每一个想法
 
-> 基于 [lark-cli](https://github.com/larksuite/cli) 的个人效率助理，参加 [飞书 CLI 创作者大赛](https://github.com/larksuite/cli)。
+> 基于 [lark-cli](https://github.com/larksuite/cli) 的个人效率助理，参加 [飞书 CLI 创作者大赛](https://waytoagi.feishu.cn/wiki/R4S3w8wTTie04nkYiL6c8rxon4d)。
 
 **说一句话就记录，AI 自动分类，定时整理，待办变飞书任务。**
 
