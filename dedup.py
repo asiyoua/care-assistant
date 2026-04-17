@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""语义去重：中文停用词过滤 + 单字 Jaccard + 时间关键词匹配。"""
+"""语义去重：时间词先比 → 不一致则不重复 → 再用 Jaccard 比内容。"""
 import sys
 import json
 import re
@@ -13,26 +13,40 @@ STOP_WORDS = {
     "么", "得", "着", "些", "什", "么", "怎", "几", "多",
 }
 
-# 时间/数量词 — 去重时忽略，避免"明天开会"和"后天开会"被判重复
-TIME_WORDS = {
-    "今", "明", "后", "昨", "周", "月", "年", "日", "号",
-    "上", "下", "早", "晚", "午", "点", "分",
-    "〇", "零", "一", "二", "三", "四", "五", "六", "七", "八", "九", "十",
-}
+
+def extract_time_phrases(text):
+    """提取时间相关的词组，用于时间维度的对比。
+
+    返回一个 set，例如 "明天上午10点开会" → {"明天", "上午", "10点"}
+    """
+    phrases = set()
+    # 相对日期
+    for w in ["今天", "明天", "后天", "昨天", "前天"]:
+        if w in text:
+            phrases.add(w)
+    # 星期
+    for w in ["周一", "周二", "周三", "周四", "周五", "周六", "周日",
+              "星期一", "星期二", "星期三", "星期四", "星期五", "星期六", "星期日",
+              "这周", "下周", "上周"]:
+        if w in text:
+            phrases.add(w)
+    # 时段
+    for w in ["上午", "下午", "晚上", "中午", "早上", "傍晚"]:
+        if w in text:
+            phrases.add(w)
+    # 具体时间：X点、X号、X日
+    m = re.findall(r'\d+[点号日]', text)
+    phrases.update(m)
+    return phrases
 
 
-def extract_chars(text, ignore_time=False):
-    """提取有意义的汉字，可选忽略时间词。"""
+def extract_chars(text):
+    """提取有意义的汉字（去停用词），用于内容维度的 Jaccard 比较。"""
     # 统一数字表示
     num_map = str.maketrans("0123456789", "〇一二三四五六七八九")
     text = text.translate(num_map)
-    chars = set()
-    for c in text:
-        if '\u4e00' <= c <= '\u9fff' and c not in STOP_WORDS:
-            if ignore_time and c in TIME_WORDS:
-                continue
-            chars.add(c)
-    return chars
+    return set(c for c in text
+               if '\u4e00' <= c <= '\u9fff' and c not in STOP_WORDS)
 
 
 def is_duplicate(new_text, existing_titles, threshold=0.45):
@@ -40,7 +54,7 @@ def is_duplicate(new_text, existing_titles, threshold=0.45):
     if len(new_chars) < 2:
         return False
 
-    new_chars_no_time = extract_chars(new_text, ignore_time=True)
+    new_time = extract_time_phrases(new_text)
 
     for title in existing_titles:
         if not title:
@@ -49,25 +63,24 @@ def is_duplicate(new_text, existing_titles, threshold=0.45):
         if len(old_chars) < 2:
             continue
 
-        # 标准比较
+        # ── 第一步：时间维度比较 ──────────────────────────
+        # 两条都有时间信息，但时间不同 → 肯定不是重复
+        old_time = extract_time_phrases(title)
+        if new_time and old_time and new_time != old_time:
+            continue
+
+        # ── 第二步：内容维度 Jaccard 比较 ──────────────
         overlap = len(new_chars & old_chars)
         union = len(new_chars | old_chars)
         if union == 0:
             continue
         sim = overlap / union
+
+        # 高相似度 → 重复
         if sim >= threshold:
             return True
 
-        # 去掉时间词后再比较（"明天开会" vs "后天开会"）
-        if new_chars_no_time and len(new_chars_no_time) >= 2:
-            old_chars_no_time = extract_chars(title, ignore_time=True)
-            if old_chars_no_time:
-                overlap2 = len(new_chars_no_time & old_chars_no_time)
-                union2 = len(new_chars_no_time | old_chars_no_time)
-                if union2 > 0 and overlap2 / union2 >= threshold + 0.15:
-                    return True
-
-        # 中等相似度 + 核心词高度重叠
+        # 中等相似度 + 新内容大部分词在旧标题中 → 重复
         if sim >= 0.30 and overlap / len(new_chars) >= 0.70:
             return True
 
