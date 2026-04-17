@@ -70,29 +70,49 @@ handle_message() {
   if echo "$text" | grep -qE 'https?://'; then
     local url
     url=$(echo "$text" | grep -oE 'https?://[^ ]+' | head -1)
-    local desc="${text//$url/}"
-    desc=$(echo "$desc" | xargs)
-    [[ -z "$desc" ]] && desc="链接收藏"
+    local user_desc="${text//$url/}"
+    user_desc=$(echo "$user_desc" | xargs)
+
+    # 提取网页内容
+    SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+    local article_info
+    article_info=$(python3 "$SCRIPT_DIR/extract-article.py" "$url" 2>/dev/null)
+
+    local title author description
+    title=$(echo "$article_info" | jq -r '.title // empty' | head -1)
+    author=$(echo "$article_info" | jq -r '.author // empty' | head -1)
+    description=$(echo "$article_info" | jq -r '.description // empty' | head -1)
+
+    # 优先级：用户描述 > 网页title > 链接
+    [[ -n "$user_desc" ]] && title="$user_desc"
+    [[ -z "$title" ]] && title="链接收藏"
+
+    # 构建备注（作者+摘要）
+    local remark=""
+    [[ -n "$author" ]] && remark="作者：$author"
+    [[ -n "$description" ]] && remark="${remark}${remark:+ | }${description:0:150}"
 
     local json
     json=$(jq -n \
-      --arg t "$desc" \
+      --arg t "$title" \
       --arg u "$url" \
+      --arg r "$remark" \
       --arg d "$today" \
-      '{"标题":$t,"链接":$u,"备注":"","标签":["其他"],"来源":"飞书对话","收藏时间":$d}')
+      '{"标题":$t,"链接":$u,"备注":$r,"标签":["其他"],"来源":"飞书对话","收藏时间":$d}')
 
     if lark-cli base +record-upsert \
       --base-token "$BASE_TOKEN" \
       --table-id "$ARTICLE_TABLE_ID" \
       --json "$json" >/dev/null 2>&1; then
-      reply_msg="已收藏：${desc}"
+      reply_msg="✅ 已收藏：$title"
+      [[ -n "$author" ]] && reply_msg="$reply_msg\n👤 $author"
     else
       reply_msg="收藏失败，请稍后重试"
-      log "ERROR: Failed to save article: ${desc}"
+      log "ERROR: Failed to save article: ${title}"
     fi
 
     lark-cli im +messages-send --as bot --chat-id "$chat_id" --text "$reply_msg" >/dev/null 2>&1
-    log "Article: ${desc} → article table"
+    log "Article: ${title} → article table"
     return
   fi
 
