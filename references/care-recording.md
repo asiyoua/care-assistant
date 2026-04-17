@@ -13,6 +13,12 @@ lark-cli 需要代理：`https_proxy=http://127.0.0.1:7897 http_proxy=http://127
 
 录音文件目录：`~/.care-assistant/recordings/`，命名 `YYYY-MM-DD_主题描述.docx`。
 
+**命名统一规则**：
+- 本地文件：`YYYY-MM-DD_主题描述.docx`
+- 飞书文档：`录音：YYYY-MM-DD_主题描述`
+
+从文件名或用户输入中提取日期和主题，保持一致。
+
 ## 三层输出
 
 ### 第一层：多维表格
@@ -48,7 +54,7 @@ lark-cli base +record-upsert \
 
 ```bash
 lark-cli docs +create \
-  --title "录音：<主题>" \
+  --title "录音：YYYY-MM-DD_主题描述" \
   --folder-token <folder_token> \
   --markdown "<content>"
 ```
