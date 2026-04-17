@@ -1,6 +1,6 @@
 ---
 name: care-assistant
-description: "CARE 个人效率助理：随手记(Capture)、自动分(Auto-sort)、定期理(Review)、照着做(Execute)。基于飞书多维表格的 AI 效率工具。触发词：记录、待办、灵感、记一下、随手记、帮我记、回顾一下、整理一下、处理录音、录音转写。当用户说了包含时间+动作的句子也应触发。即使用户没说'记录'，只要表达了保存某个想法、任务、灵感或链接的意图，就应使用此 skill。"
+description: "CARE 个人效率助理：随手记(Capture)、自动分(Auto-sort)、定期回顾(Review)、照着做(Execute)。基于飞书多维表格的 AI 效率工具。触发词：记录、待办、灵感、记一下、随手记、帮我记、回顾一下、整理一下、处理录音、录音转写。当用户说了包含时间+动作的句子也应触发。即使用户没说'记录'，只要表达了保存某个想法、任务、灵感或链接的意图，就应使用此 skill。"
 ---
 
 # CARE 助理 — 关心你的每一个想法
@@ -25,8 +25,9 @@ description: "CARE 个人效率助理：随手记(Capture)、自动分(Auto-sort
 - `article_table_id`：文章收藏表 ID
 - `view_id`：默认视图 ID
 - `user_open_id`：当前用户 open_id
+- `folder_token`：飞书云空间文件夹 token（存放录音文档、回顾文档）
 
-读取配置后，用配置值替换下面所有命令中的 `<base_token>`、`<table_id>`、`<article_table_id>`、`<user_open_id>`。
+读取配置后，用配置值替换下面所有命令中的 `<base_token>`、`<table_id>`、`<article_table_id>`、`<user_open_id>`、`<folder_token>`。
 
 **网络注意：** lark-cli 连飞书 API 需要代理。命令执行前加 `https_proxy=http://127.0.0.1:7897 http_proxy=http://127.0.0.1:7897` 前缀。如果直连可达则不需要。
 
@@ -49,7 +50,7 @@ description: "CARE 个人效率助理：随手记(Capture)、自动分(Auto-sort
 
 ### 1. 识别内容类型
 
-根据用户输入判断类型（有且仅有 3 种）：
+根据用户输入判断类型：
 
 | 类型 | 判断依据 | 示例 | 目标表 |
 |------|---------|------|--------|
@@ -177,7 +178,7 @@ lark-cli base +record-list \
 
 **2. 生成飞书回顾文档**
 
-使用 `lark-cli docs +create` 创建飞书文档，标题格式：`CARE 回顾：YYYY-MM-DD`（单日）或 `CARE 周回顾：MM.DD - MM.DD`（一周）。
+使用 `lark-cli docs +create` 创建飞书文档，标题格式：`CARE 回顾：YYYY-MM-DD`（单日）或 `CARE 周回顾：MM.DD - MM.DD`（一周），`--folder-token <folder_token>` 指定存放文件夹。
 
 文档结构：
 
@@ -258,7 +259,7 @@ lark-cli base +record-list \
 
 **第二层：飞书文档（提炼 + 原文，同一个文档）**
 
-使用 `lark-cli docs +create` 创建飞书文档，标题格式：`录音：{主题描述}`（如"录音：太青年运分享"）
+使用 `lark-cli docs +create` 创建飞书文档，标题格式：`录音：{主题描述}`（如"录音：太青年运分享"），`--folder-token <folder_token>` 指定存放文件夹。
 
 文档结构（按顺序）：
 

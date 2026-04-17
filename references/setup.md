@@ -17,6 +17,7 @@
   "article_table_id": "<创建后填入>",
   "view_id": "<创建后填入>",
   "user_open_id": "<从 auth status 获取>",
+  "folder_token": "<飞书云空间文件夹 token>",
   "created_at": "<当天日期>"
 }
 ```
@@ -53,7 +54,7 @@ lark-cli base +base-create \
 lark-cli base +table-create \
   --base-token <base_token> \
   --name "记录表" \
-  --fields '[{"name":"记录标题","type":"text"},{"name":"来源","type":"select","multiple":false,"options":[{"name":"飞书对话"},{"name":"终端"},{"name":"录音"}]},{"name":"标签","type":"select","multiple":true,"options":[{"name":"待办"},{"name":"灵感"},{"name":"其他"},{"name":"AI"},{"name":"社群"},{"name":"内容创作"},{"name":"线下"}]},{"name":"详细内容","type":"text"},{"name":"创建日期","type":"datetime","style":{"format":"yyyy-MM-dd"}},{"name":"截止日期","type":"datetime","style":{"format":"yyyy-MM-dd"}},{"name":"完成状态","type":"select","multiple":false,"options":[{"name":"未完成"},{"name":"已完成"}]},{"name":"关联文档","type":"text","style":{"type":"url"}}]'
+  --fields '[{"name":"记录标题","type":"text"},{"name":"来源","type":"select","multiple":false,"options":[{"name":"飞书对话"},{"name":"终端"},{"name":"录音"}]},{"name":"标签","type":"select","multiple":true,"options":[{"name":"待办"},{"name":"灵感"},{"name":"其他"},{"name":"AI"},{"name":"社群"},{"name":"内容创作"},{"name":"线下"}]},{"name":"详细内容","type":"text"},{"name":"创建日期","type":"datetime","style":{"format":"yyyy-MM-dd"}},{"name":"截止日期","type":"datetime","style":{"format":"yyyy-MM-dd"}},{"name":"完成状态","type":"select","multiple":false,"options":[{"name":"未完成"},{"name":"进行中"},{"name":"已完成"}]},{"name":"关联文档","type":"text","style":{"type":"url"}}]'
 ```
 
 记录返回的 `table_id` 和默认视图 `view_id`。
@@ -69,7 +70,11 @@ lark-cli base +table-create \
 
 记录返回的 `article_table_id`。
 
-### Step 5: 创建录音文件目录
+### Step 5: 创建飞书文件夹和本地录音目录
+
+1. 请用户在飞书云空间创建一个文件夹，命名为「CARE 助理」
+2. 从浏览器地址栏复制文件夹 token（URL 中 `/folder/` 后面的部分）
+3. 本地创建录音文件目录：
 
 ```bash
 mkdir -p ~/.care-assistant/recordings
@@ -88,6 +93,7 @@ cat > ~/.care-assistant/config.json << 'EOF'
   "article_table_id": "<article_table_id>",
   "view_id": "<view_id>",
   "user_open_id": "<userOpenId>",
+  "folder_token": "<飞书文件夹 token>",
   "created_at": "<今天日期>"
 }
 EOF
