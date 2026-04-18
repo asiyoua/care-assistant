@@ -81,7 +81,13 @@ lark-cli base +record-upsert \
 
 **2. 本地保存（使用 Write 工具）：**
 
-完整路径：`/Users/bian/MyWorkspace/Knowledge/Obsidian/V0-MyAntinet/5-DaliyCC/CARE_Assistant/YYMMDD_主题.md`
+⚠️ **必须使用以下绝对路径，不能使用相对路径：**
+
+```
+/Users/bian/MyWorkspace/Knowledge/Obsidian/V0-MyAntinet/5-DaliyCC/CARE_Assistant/YYMMDD_主题.md
+```
+
+**确认**：文件必须保存在 `CARE_Assistant/` 子目录下，不是 `5-DaliyCC/` 根目录。
 
 **3. 飞书同步（使用 Bash 工具，必须执行）：**
 
