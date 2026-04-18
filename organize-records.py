@@ -12,10 +12,9 @@ import subprocess
 import os
 from datetime import datetime
 
-# 配置
-BASE_TOKEN = "KuC6bRThXa5qAbsYP3Uck2pmn8g"
-TABLE_ID = "tbl7WLdmqaX1GL4j"
-USER_OPEN_ID = "ou_c31c3b7ab2774cc6cb1cfe6a17810aeb"
+# 添加项目路径以导入 config_loader
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from config_loader import get_base_token, get_table_id, get_user_open_id
 
 def run_command(cmd):
     """运行命令并返回输出"""
@@ -30,20 +29,25 @@ def run_command(cmd):
 
 def get_records():
     """获取所有记录"""
-    cmd = f"lark-cli base +record-list --base-token {BASE_TOKEN} --table-id {TABLE_ID} --limit 200"
+    base_token = get_base_token()
+    table_id = get_table_id()
+    cmd = f"lark-cli base +record-list --base-token {base_token} --table-id {table_id} --limit 200"
     output = run_command(cmd)
     data = json.loads(output)
     return data.get("data", {}).get("data", [])
 
 def update_record(record_id, updates):
     """更新记录"""
+    base_token = get_base_token()
+    table_id = get_table_id()
     json_data = json.dumps(updates, ensure_ascii=False)
-    cmd = f"lark-cli base +record-upsert --base-token {BASE_TOKEN} --table-id {TABLE_ID} --record-id {record_id} --json '{json_data}'"
+    cmd = f"lark-cli base +record-upsert --base-token {base_token} --table-id {table_id} --record-id {record_id} --json '{json_data}'"
     run_command(cmd)
 
 def create_task(summary, due_date):
     """创建飞书任务"""
-    cmd = f"lark-cli task +create --summary '{summary}' --due '{due_date}' --assignee {USER_OPEN_ID}"
+    user_open_id = get_user_open_id()
+    cmd = f"lark-cli task +create --summary '{summary}' --due '{due_date}' --assignee {user_open_id}"
     result = run_command(cmd)
     return result
 

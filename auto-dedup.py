@@ -6,9 +6,11 @@
 import json
 import subprocess
 import os
+import sys
 
-BASE_TOKEN = "KuC6bRThXa5qAbsYP3Uck2pmn8g"
-TABLE_ID = "tbl7WLdmqaX1GL4j"
+# 添加项目路径以导入 config_loader
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from config_loader import get_base_token, get_table_id
 
 def run_command(cmd):
     """运行命令并返回输出"""
@@ -23,14 +25,18 @@ def run_command(cmd):
 
 def get_all_records():
     """获取所有记录（使用 bot API）"""
-    cmd = f'lark-cli api GET --as bot "/open-apis/bitable/v1/apps/{BASE_TOKEN}/tables/{TABLE_ID}/records?limit=200"'
+    base_token = get_base_token()
+    table_id = get_table_id()
+    cmd = f'lark-cli api GET --as bot "/open-apis/bitable/v1/apps/{base_token}/tables/{table_id}/records?limit=200"'
     output, _, _ = run_command(cmd)
     data = json.loads(output)
     return data.get("data", {}).get("items", [])
 
 def delete_record(record_id):
     """删除记录"""
-    cmd = f'lark-cli api DELETE --as bot "/open-apis/bitable/v1/apps/{BASE_TOKEN}/tables/{TABLE_ID}/records/{record_id}"'
+    base_token = get_base_token()
+    table_id = get_table_id()
+    cmd = f'lark-cli api DELETE --as bot "/open-apis/bitable/v1/apps/{base_token}/tables/{table_id}/records/{record_id}"'
     _, stderr, returncode = run_command(cmd)
     return returncode == 0
 

@@ -7,19 +7,34 @@ description: "CARE 录音转写：处理录音转写文档，提取待办/灵感
 
 ## 前置
 
-读取 `~/.care-assistant/config.json` 获取 `base_token`、`table_id`、`user_open_id`、`folder_token`。
+**读取配置文件：**
+```bash
+CONFIG_FILE="$HOME/.care-assistant/config.json"
+```
 
-lark-cli 需要代理：`https_proxy=http://127.0.0.1:7897 http_proxy=http://127.0.0.1:7897`。
+从配置中读取：
+- `base_token`: 飞书多维表格 Base Token
+- `table_id`: 记录表 ID
+- `user_open_id`: 用户 Open ID
+- `folder_token`: 飞书文件夹 Token
+- `recordings_dir`: 已处理录音文档存放目录
+- `output_dir`: 本地输出目录
 
-**文件路径配置：**
+**环境变量：**
+```bash
+export https_proxy=http://127.0.0.1:7897
+export http_proxy=http://127.0.0.1:7897
+```
+
+**文件路径配置（从 config.json 读取）：**
 - 录音源文件：用户提供的原文档（只读）
-- 处理后移动：`/Users/bian/.care-assistant/recordings/`（代表已处理）
-- 本地输出目录：`/Users/bian/MyWorkspace/Knowledge/Obsidian/V0-MyAntinet/5-DaliyCC/CARE_Assistant/`
-- 飞书文件夹：folder_token 指定的飞书云空间文件夹
+- 处理后移动：`$recordings_dir/`（代表已处理）
+- 本地输出目录：`$output_dir/`
+- 飞书文件夹：$folder_token 指定的飞书云空间文件夹
 
 **处理开始时：先移动录音文档到 recordings 文件夹**
-- 使用 `mv` 命令将用户提供的录音文档移动到 `/Users/bian/.care-assistant/recordings/`
-- 确保目标文件夹存在（不存在则创建）
+- 使用 `mv` 命令将用户提供的录音文档移动到 `$recordings_dir/`
+- 确保目标文件夹存在：`mkdir -p "$recordings_dir"`
 - 移动代表文档已处理，避免重复处理
 
 **命名格式（重要）：**
@@ -37,8 +52,8 @@ lark-cli 需要代理：`https_proxy=http://127.0.0.1:7897 http_proxy=http://127
 **⚠️ 严格执行以下顺序，不可跳过任何步骤：**
 
 0. **移动录音文档到 recordings 文件夹**（预处理）
-   - 创建目标文件夹：`mkdir -p /Users/bian/.care-assistant/recordings`
-   - 移动用户提供的文档到该文件夹：`mv <源文件> /Users/bian/.care-assistant/recordings/`
+   - 创建目标文件夹：`mkdir -p "$recordings_dir"`
+   - 移动用户提供的文档到该文件夹：`mv "<源文件>" "$recordings_dir/"`
 
 1. **先提取待办和灵感，写入飞书表格**（第一层：多维表格）
 2. **再生成处理后的文档，保存到本地**（第二层：双端保存 - 本地）
@@ -64,8 +79,8 @@ lark-cli 需要代理：`https_proxy=http://127.0.0.1:7897 http_proxy=http://127
 
 ```bash
 lark-cli base +record-upsert \
-  --base-token <base_token> \
-  --table-id <table_id> \
+  --base-token $base_token \
+  --table-id $table_id \
   --json '{
     "记录标题": "<title>",
     "来源": "录音",
@@ -78,7 +93,7 @@ lark-cli base +record-upsert \
   }'
 ```
 
-6. 待办类创建飞书任务：`lark-cli task +create --summary "<title>" --due "<date>" --assignee "<user_open_id>"`
+6. 待办类创建飞书任务：`lark-cli task +create --summary "<title>" --due "<date>" --assignee $user_open_id`
 
 ### 第二层：双端保存（本地 + 飞书）
 
@@ -91,13 +106,13 @@ lark-cli base +record-upsert \
 
 **2. 本地保存（使用 Write 工具）：**
 
-⚠️ **必须使用以下绝对路径，不能使用相对路径：**
+⚠️ **必须使用以下绝对路径（从配置读取），不能使用相对路径：**
 
 ```
-/Users/bian/MyWorkspace/Knowledge/Obsidian/V0-MyAntinet/5-DaliyCC/CARE_Assistant/YYMMDD_主题.md
+$output_dir/YYMMDD_主题.md
 ```
 
-**确认**：文件必须保存在 `CARE_Assistant/` 子目录下，不是 `5-DaliyCC/` 根目录。
+**确认**：文件必须保存在 `$output_dir` 配置指定的目录下。
 
 **3. 飞书同步（使用 Bash 工具，必须执行）：**
 
@@ -105,7 +120,7 @@ lark-cli base +record-upsert \
 export https_proxy=http://127.0.0.1:7897 http_proxy=http://127.0.0.1:7897
 lark-cli docs +create \
   --title "录音：YYMMDD_主题" \
-  --folder-token <folder_token> \
+  --folder-token $folder_token \
   --markdown "<content>"
 ```
 
@@ -220,7 +235,7 @@ lark-cli docs +create \
    - 其他 Z 条
 
 📄 双端文档：
-   - 本地：/Users/bian/MyWorkspace/Knowledge/Obsidian/V0-MyAntinet/5-DaliyCC/CARE_Assistant/YYMMDD_主题.md
+   - 本地：$output_dir/YYMMDD_主题.md
    - 飞书：{doc_url}
 
 📝 源文件：用户提供的原文档路径

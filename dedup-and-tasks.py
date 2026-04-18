@@ -11,10 +11,9 @@ import subprocess
 import os
 from datetime import datetime
 
-# 配置
-BASE_TOKEN = "KuC6bRThXa5qAbsYP3Uck2pmn8g"
-TABLE_ID = "tbl7WLdmqaX1GL4j"
-USER_OPEN_ID = "ou_c31c3b7ab2774cc6cb1cfe6a17810aeb"
+# 添加项目路径以导入 config_loader
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from config_loader import get_base_token, get_table_id, get_user_open_id
 
 def run_command(cmd):
     """运行命令并返回输出"""
@@ -48,7 +47,8 @@ def mark_as_duplicate(title, create_date):
 
 def create_task(summary, due_date):
     """创建飞书任务"""
-    cmd = f"lark-cli task +create --summary '{summary}' --due '{due_date}' --assignee {USER_OPEN_ID}"
+    user_open_id = get_user_open_id()
+    cmd = f"lark-cli task +create --summary '{summary}' --due '{due_date}' --assignee {user_open_id}"
     output, _, returncode = run_command(cmd)
     if returncode == 0:
         data = json.loads(output)
