@@ -382,5 +382,6 @@ MIT
 
 ---
 
-**作者**: @asiyoua  
+**作者**: 胡九思  
+**公众号**: 九思AI歪博  
 **比赛**: [飞书 CLI 创作者大赛](https://waytoagi.feishu.cn/wiki/R4S3w8wTTie04nkYiL6c8rxon4d)
