@@ -47,7 +47,15 @@ lark-cli base +record-list --base-token <base_token> --table-id <table_id> --lim
 - **灵感分组**：按主题分组，点评进展和下一步
 - **标签分布**：统计各标签数量，发现关注方向
 
-### 3. 生成飞书文档
+### 3. 双端保存（本地 + 飞书）
+
+**1. 本地保存（Markdown格式）：**
+
+文件名：`/Users/bian/MyWorkspace/Knowledge/Obsidian/V0-MyAntinet/5-DaliyCC/CARE_Assistant/回顾_YYYY-MM-DD.md`
+
+使用 Write 工具写入本地文件。
+
+**2. 飞书同步：**
 
 ```bash
 lark-cli docs +create \
@@ -82,7 +90,9 @@ lark-cli docs +create \
 ### 4. 汇报
 
 ```
-📄 回顾文档已生成：{doc_url}
+📄 回顾文档已生成：
+- 本地：/Users/bian/MyWorkspace/Knowledge/Obsidian/V0-MyAntinet/5-DaliyCC/CARE_Assistant/回顾_YYYY-MM-DD.md
+- 飞书：{doc_url}
 - 本期 N 条记录，X 条待办已完成，Y 条灵感待行动
 - 🔴 过期待办 Z 条，建议关注
 ```

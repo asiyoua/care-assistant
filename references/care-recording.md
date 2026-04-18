@@ -11,13 +11,12 @@ description: "CARE 录音转写：处理录音转写文档，提取待办/灵感
 
 lark-cli 需要代理：`https_proxy=http://127.0.0.1:7897 http_proxy=http://127.0.0.1:7897`。
 
-录音文件目录：`~/.care-assistant/recordings/`，命名 `YYYY-MM-DD_主题描述.docx`。
-
-**命名统一规则**：
-- 本地文件：`YYYY-MM-DD_主题描述.docx`
-- 飞书文档：`录音：YYYY-MM-DD_主题描述`
-
-从文件名或用户输入中提取日期和主题，保持一致。
+**文件路径配置：**
+- 录音源文件：`~/.care-assistant/recordings/YYYY-MM-DD_主题描述.docx`（只读存档）
+- 提炼文档本地：`/Users/bian/MyWorkspace/Knowledge/Obsidian/V0-MyAntinet/5-DaliyCC/CARE_Assistant/YYYY-MM-DD_主题描述.md`
+- 提炼文档飞书：folder_token 指定的飞书云空间文件夹
+- 周回顾本地：同上目录
+- 周回顾飞书：同上文件夹
 
 ## 三层输出
 
@@ -50,7 +49,15 @@ lark-cli base +record-upsert \
 
 6. 待办类创建飞书任务：`lark-cli task +create --summary "<title>" --due "<date>" --assignee "<user_open_id>"`
 
-### 第二层：飞书文档
+### 第二层：双端保存（本地 + 飞书）
+
+**1. 本地保存（Markdown格式）：**
+
+文件名：`/Users/bian/MyWorkspace/Knowledge/Obsidian/V0-MyAntinet/5-DaliyCC/CARE_Assistant/YYYY-MM-DD_主题描述.md`
+
+使用 Write 工具写入本地文件。
+
+**2. 飞书同步：**
 
 ```bash
 lark-cli docs +create \
@@ -90,8 +97,9 @@ lark-cli docs +create \
 ```
 录音处理完成：
 - 表格记录 N 条（待办 X / 灵感 Y / 其他 Z）
-- 飞书文档已创建：{doc_url}
-- 录音文件已归档：~/.care-assistant/recordings/YYYY-MM-DD_主题.docx
+- 本地文档：/Users/bian/MyWorkspace/Knowledge/Obsidian/V0-MyAntinet/5-DaliyCC/CARE_Assistant/YYYY-MM-DD_主题.md
+- 飞书文档：{doc_url}
+- 录音源文件：~/.care-assistant/recordings/YYYY-MM-DD_主题.docx
 ```
 
 ## 提取原则
