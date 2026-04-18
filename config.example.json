@@ -1,0 +1,11 @@
+{
+  "base_token": "your_base_token_here",
+  "table_id": "your_table_id_here",
+  "view_id": "your_view_id_here",
+  "article_table_id": "your_article_table_id_here",
+  "user_open_id": "your_user_open_id_here",
+  "folder_token": "your_folder_token_here",
+  "recordings_dir": "/Users/yourname/.care-assistant/recordings",
+  "output_dir": "/Users/yourname/MyWorkspace/Knowledge/Obsidian/V0-MyAntinet/5-DaliyCC/CARE_Assistant",
+  "created_at": "2026-04-18"
+}

@@ -364,7 +364,7 @@ lark-cli base +base-create "CARE 助理"
 
 # 输出示例：
 # Base created successfully!
-# base_token: KuC6bRThXa5qAbsYP3Uck2pmn8g  ← 保存这个
+# base_token: KuC6xxxxxxxxxxxxxxxxxxxxxPm  ← 保存这个（这是示例，你的会不同）
 
 # 创建记录表
 lark-cli base +table-create \
@@ -384,7 +384,7 @@ lark-cli base +table-create \
 
 # 输出示例：
 # Table created successfully!
-# table_id: tbl7WLdmqaX1GL4j  ← 保存这个
+# table_id: tblxxxxxxxxxxxxxxGL  ← 保存这个（这是示例，你的会不同）
 ```
 
 #### 8.3 获取 folder_token
@@ -449,11 +449,90 @@ AI：检测到首次使用，正在初始化 CARE 助理...
 - ✅ 飞书机器人已创建（Bot 模式需要）
 - ✅ config.json 已填写完整
 
-    ├── care-assistant.md              # 主路由 skill
-    ├── care-capture.md                # 随手记 skill
-    ├── care-review.md                 # 回顾整理 skill
-    └── care-recording.md              # 录音转写 skill
+---
+
+## 日常使用
+
+配置完成后，你可以通过以下方式使用 CARE 助理：
+
+### 在 Claude Code 中使用
+
+打开 Claude Code，直接像对话一样说出你想记录的内容：
+
+#### 场景1：记录待办
 ```
+你：明天下午3点开会
+AI：已记录 [待办]：明天下午3点开会（已创建飞书任务）
+```
+
+#### 场景2：记录灵感
+```
+你：灵感 做一个自动整理录音的工具
+AI：已记录 [灵感]：做一个自动整理录音的工具
+```
+
+#### 场景3：处理录音转写
+```
+你：帮我处理一下这个录音 [文件路径或粘贴内容]
+AI：
+📊 录音处理完成
+
+✅ 飞书表格：
+   - 新增记录 5 条
+   - 待办 3 条（已创建飞书任务）
+   - 灵感 2 条
+
+📄 双端文档：
+   - 本地：/Users/xxx/.../YYMMDD_主题.md
+   - 飞书：https://xxx.feishu.cn/doc/xxx
+```
+
+#### 场景4：回顾本周
+```
+你：回顾一下这周
+AI：
+📊 本周回顾
+- 共记录 23 条
+- 待办 8 条（已完成 3 条，进行中 2 条，已过期 3 条）
+- 灵感 12 条
+
+📄 回顾文档已生成：https://xxx.feishu.cn/doc/xxx
+```
+
+### Bot 模式（飞书中使用）
+
+如果你想 7x24 后台运行，在飞书中直接记录：
+
+```bash
+# 启动 Bot 模式
+cd ~/MyWorkspace/MyCode/Feishu/care-assistant
+nohup bash bot-handler.sh > /tmp/care-bot.log 2>&1 &
+
+# 查看日志
+tail -f /tmp/care-bot.log
+
+# 停止 Bot 模式
+pkill -f bot-handler.sh
+```
+
+启动后，直接在飞书中给 CARE 助理 Bot 发消息即可记录。
+
+### 技能文件位置（供参考）
+
+安装后的技能文件位于：
+```
+~/.claude/skills/care-assistant/
+    ├── SKILL.md                     # 主路由 skill
+    ├── references/                  # 子技能引用
+    │   ├── capture.md               # 随手记
+    │   ├── review.md                # 回顾整理
+    │   └── recording.md             # 录音转写
+    └── care-assistant               # 运行时技能目录
+        ├── bot-handler.sh           # Bot 处理脚本
+        └── references/
+```
+
+---
 
 ## 根据自己的情况改写
 
