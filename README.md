@@ -329,7 +329,7 @@ cd care-assistant
 
 # 2. 安装技能
 mkdir -p ~/.claude/skills/
-cp -r care-assistant ~/.claude/skills/
+cp -r skills/* ~/.claude/skills/
 
 # 3. 创建配置目录
 mkdir -p ~/.care-assistant
@@ -397,10 +397,10 @@ lark-cli base +table-create \
 
 #### 8.4 配置 Bot 模式（可选）
 
-如果你想使用 Bot 模式，编辑 `bot-handler.sh`：
+如果你想使用 Bot 模式，编辑 `scripts/bot-handler.sh`：
 
 ```bash
-nano ~/MyWorkspace/MyCode/Feishu/care-assistant/bot-handler.sh
+nano ~/MyWorkspace/MyCode/Feishu/care-assistant/scripts/bot-handler.sh
 ```
 
 填入你的机器人凭证：
@@ -506,7 +506,7 @@ AI：
 ```bash
 # 启动 Bot 模式
 cd ~/MyWorkspace/MyCode/Feishu/care-assistant
-nohup bash bot-handler.sh > /tmp/care-bot.log 2>&1 &
+nohup bash scripts/bot-handler.sh > /tmp/care-bot.log 2>&1 &
 
 # 查看日志
 tail -f /tmp/care-bot.log
@@ -519,17 +519,22 @@ pkill -f bot-handler.sh
 
 ### 技能文件位置（供参考）
 
-安装后的技能文件位于：
+安装后的技能文件位于 `~/.claude/skills/`：
 ```
-~/.claude/skills/care-assistant/
-    ├── SKILL.md                     # 主路由 skill
-    ├── references/                  # 子技能引用
-    │   ├── capture.md               # 随手记
-    │   ├── review.md                # 回顾整理
-    │   └── recording.md             # 录音转写
-    └── care-assistant               # 运行时技能目录
-        ├── bot-handler.sh           # Bot 处理脚本
-        └── references/
+~/.claude/skills/
+├── care-assistant/              # 主路由 skill（识别意图并分发）
+│   ├── SKILL.md
+│   └── references/              # 子技能引用文档
+│       ├── capture.md           # 随手记
+│       ├── review.md            # 回顾整理
+│       ├── recording.md         # 录音转写
+│       └── setup.md             # 首次设置
+├── care-capture/                # 随手记 skill（独立可用）
+│   └── SKILL.md
+├── care-recording/              # 录音转写 skill（独立可用）
+│   └── SKILL.md
+└── care-review/                 # 回顾整理 skill（独立可用）
+    └── SKILL.md
 ```
 
 ---
