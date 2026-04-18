@@ -12,11 +12,19 @@ description: "CARE 录音转写：处理录音转写文档，提取待办/灵感
 lark-cli 需要代理：`https_proxy=http://127.0.0.1:7897 http_proxy=http://127.0.0.1:7897`。
 
 **文件路径配置：**
-- 录音源文件：`~/.care-assistant/recordings/YYYY-MM-DD_主题描述.docx`（只读存档）
-- 提炼文档本地：`/Users/bian/MyWorkspace/Knowledge/Obsidian/V0-MyAntinet/5-DaliyCC/CARE_Assistant/YYYY-MM-DD_主题描述.md`
-- 提炼文档飞书：folder_token 指定的飞书云空间文件夹
-- 周回顾本地：同上目录
-- 周回顾飞书：同上文件夹
+- 录音源文件：用户提供的原文档（只读）
+- 本地目录：`/Users/bian/MyWorkspace/Knowledge/Obsidian/V0-MyAntinet/5-DaliyCC/CARE_Assistant/`
+- 飞书文件夹：folder_token 指定的飞书云空间文件夹
+
+**命名格式（重要）：**
+- 日期格式：YYMMDD（六位数字），如 260418 代表 2026-04-18
+- 日录音：`YYMMDD日录音.md`（如 260418日录音.md）
+- 主题录音：`YYMMDD_主题.md`（如 260418_太青年运分享.md）
+
+**日期计算原则：**
+- 按照录音发生的那一天计算，不是处理日期
+- 如果用户没有明确说明日期，必须先询问用户："这个录音是哪一天的？"
+- 推算方法：如果录音内容中有时间线索（如"今天"、"明天"），结合用户提供的参考日期计算
 
 ## 三层输出
 
@@ -51,44 +59,62 @@ lark-cli base +record-upsert \
 
 ### 第二层：双端保存（本地 + 飞书）
 
-**1. 本地保存（Markdown格式）：**
+**步骤顺序：先本地保存，再同步飞书**
 
-文件名：`/Users/bian/MyWorkspace/Knowledge/Obsidian/V0-MyAntinet/5-DaliyCC/CARE_Assistant/YYYY-MM-DD_主题描述.md`
+**1. 确定日期和文件名：**
+- 如果用户没有说明日期，先问："这个录音是哪一天的？"
+- 日录音文件名：`YYMMDD日录音.md`
+- 主题录音文件名：`YYMMDD_主题.md`
 
-使用 Write 工具写入本地文件。
+**2. 本地保存（使用 Write 工具）：**
 
-**2. 飞书同步：**
+完整路径：`/Users/bian/MyWorkspace/Knowledge/Obsidian/V0-MyAntinet/5-DaliyCC/CARE_Assistant/YYMMDD_主题.md`
+
+**3. 飞书同步（使用 Bash 工具，必须执行）：**
 
 ```bash
+export https_proxy=http://127.0.0.1:7897 http_proxy=http://127.0.0.1:7897
 lark-cli docs +create \
-  --title "录音：YYYY-MM-DD_主题描述" \
+  --title "录音：YYMMDD_主题" \
   --folder-token <folder_token> \
   --markdown "<content>"
 ```
 
+**重要：飞书同步是必须执行的步骤，不能跳过。**
+
 文档结构：
 
-```
-## 精炼提炼
+```markdown
+# 精炼提炼
 
-### 亮点摘录（callout 高亮块）
-### 写作话题（切入点 + 参考段落 + 适合平台）
-### 行动要点（表格：行动项 | 优先级）
+## 亮点摘录
+> 金句1
+> 金句2
+
+## 写作话题
+| 话题 | 切入点 | 适合平台 |
+|------|--------|----------|
+| AI教学 | 从反面出发 | 小红书视频 |
+
+## 行动要点
+| 行动项 | 类型 | 紧急度 |
+|--------|------|--------|
+| 明天开会 | 待办 | 高 |
 
 ---
 
-## 原文转写
+## 完整对话记录
 
 **重要：保留原始时间戳格式，每个时间戳独占一行。**
 
-输入格式通常是：
-```
 采访者  00:00你你你你你你对吧，不着急，不着急。
 受访者  00:04嗯，没事，我反正我正好也要整理一下到底哪些平台大概是什么样子的。
 ```
 
-输出时**必须保持这个格式**，每个说话人+时间戳+内容独占一行，不要把多行合并或删除换行。
-```
+**排版要求：**
+- `## 完整对话记录` 使用二级标题
+- 少用加粗 `**text**`，多用高亮块 `> quote`
+- 需要强调的内容用标题（# ##）而非加粗
 
 创建后回填所有录音记录的 `关联文档` 字段。
 
@@ -97,9 +123,9 @@ lark-cli docs +create \
 ```
 录音处理完成：
 - 表格记录 N 条（待办 X / 灵感 Y / 其他 Z）
-- 本地文档：/Users/bian/MyWorkspace/Knowledge/Obsidian/V0-MyAntinet/5-DaliyCC/CARE_Assistant/YYYY-MM-DD_主题.md
+- 本地文档：/Users/bian/MyWorkspace/Knowledge/Obsidian/V0-MyAntinet/5-DaliyCC/CARE_Assistant/YYMMDD_主题.md
 - 飞书文档：{doc_url}
-- 录音源文件：~/.care-assistant/recordings/YYYY-MM-DD_主题.docx
+- 录音源文件：用户提供的原文档
 ```
 
 ## 提取原则
