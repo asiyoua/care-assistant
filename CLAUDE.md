@@ -20,11 +20,11 @@
 ## lark-cli 注意事项
 
 - 需要代理：`https_proxy=http://127.0.0.1:7897 http_proxy=http://127.0.0.1:7897`
-- Base Token: `KuC6bRThXa5qAbsYP3Uck2pmn8g`
-- 记录表: `tbl7WLdmqaX1GL4j`
-- 文章收藏表: `tbl15CjCktMEOWtj`
-- user_open_id: `ou_c31c3b7ab2774cc6cb1cfe6a17810aeb`
-- folder_token: `InWufwboXlo35ld3ch3c3zuVnIv`
+- 配置信息从 `~/.care-assistant/config.json` 读取：
+  - `base_token`: 飞书多维表格 Base Token
+  - `table_id`: 记录表 ID
+  - `user_open_id`: 用户 Open ID
+  - `folder_token`: 飞书文件夹 Token
 
 ## 已完成
 

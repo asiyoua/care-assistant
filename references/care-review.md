@@ -51,18 +51,18 @@ lark-cli base +record-list --base-token <base_token> --table-id <table_id> --lim
 
 **1. 本地保存（Markdown格式）：**
 
-目录：`/Users/bian/MyWorkspace/Knowledge/Obsidian/V0-MyAntinet/5-DaliyCC/CARE_Assistant/`
+目录：`$output_dir/`（从 config.json 读取）
 
 文件名：`回顾_YYMMDD-YYMMDD.md`（如 `回顾_260411-260417.md`）
 
-使用 Write 工具写入到完整绝对路径。
+使用 Write 工具写入到完整绝对路径：`$output_dir/回顾_YYMMDD-YYMMDD.md`
 
 **2. 飞书同步（必须执行）：**
 
 ```bash
 lark-cli docs +create \
   --title "CARE 回顾：MM.DD - MM.DD" \
-  --folder-token <folder_token> \
+  --folder-token $folder_token \
   --markdown "<content>"
 ```
 
@@ -95,7 +95,7 @@ lark-cli docs +create \
 
 ```
 📄 回顾文档已生成：
-- 本地：/Users/bian/MyWorkspace/Knowledge/Obsidian/V0-MyAntinet/5-DaliyCC/CARE_Assistant/回顾_YYYY-MM-DD.md
+- 本地：$output_dir/回顾_YYMMDD-YYMMDD.md
 - 飞书：{doc_url}
 - 本期 N 条记录，X 条待办已完成，Y 条灵感待行动
 - 🔴 过期待办 Z 条，建议关注
