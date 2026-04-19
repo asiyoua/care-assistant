@@ -16,7 +16,8 @@ lark-cli 需要代理：`https_proxy=http://127.0.0.1:7897 http_proxy=http://127
 用户说"查看记录"、"有多少待办"时：
 
 ```bash
-lark-cli base +record-list --base-token <base_token> --table-id <table_id> --limit 200
+# 使用 bot API 读取（按字段名，不依赖顺序）
+lark-cli api GET --as bot "/open-apis/bitable/v1/apps/<base_token>/tables/<table_id>/records?limit=200"
 ```
 
 按用户关心的维度汇总展示，直接回复，不生成文档。
@@ -36,7 +37,33 @@ lark-cli base +record-list --base-token <base_token> --table-id <table_id> --lim
 ### 1. 读取记录
 
 ```bash
-lark-cli base +record-list --base-token <base_token> --table-id <table_id> --limit 200
+# 使用 bot API 读取（按字段名，不依赖顺序）
+lark-cli api GET --as bot "/open-apis/bitable/v1/apps/<base_token>/tables/<table_id>/records?limit=200"
+```
+
+同时读文章表（`article_table_id`）。默认最近 7 天，用户可指定范围。
+
+**字段访问方式**（bot API 返回格式）：
+```json
+{
+  "fields": {
+    "记录标题": "标题内容",
+    "标签": ["待办", "技术"],
+    "详细内容": "完整内容",
+    "创建日期": 1775836800000,  // 毫秒时间戳，需转换
+    "完成状态": "未完成",
+    "截止日期": 1775923200000,
+    "来源": "终端",
+    "关联文档": "https://..."
+  },
+  "record_id": "recxxxxx"
+}
+```
+
+**日期转换**：毫秒时间戳 → 日期
+```bash
+# 在 jq 中转换
+jq '.data.items[] | .fields."创建日期" / 1000 | strftime("%Y-%m-%d")'
 ```
 
 同时读文章表。默认最近 7 天，用户可指定范围。

@@ -69,7 +69,13 @@ export http_proxy=http://127.0.0.1:7897
 ### 第一层：多维表格（必须首先执行）
 
 1. 读取转写内容
-2. 读取已有记录用于去重：`+record-list --limit 200`
+2. 读取已有记录用于去重：
+
+```bash
+# 使用 bot API 读取（按字段名，不依赖顺序）
+lark-cli api GET --as bot "/open-apis/bitable/v1/apps/$base_token/tables/$table_id/records?limit=200"
+```
+
 3. 提取可记录项：
    - 待办（有行动要求）
    - 灵感（点子、计划）

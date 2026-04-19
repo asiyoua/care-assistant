@@ -25,7 +25,8 @@ lark-cli 需要代理：`https_proxy=http://127.0.0.1:7897 http_proxy=http://127
 ## 去重
 
 ```bash
-lark-cli base +record-list --base-token <base_token> --table-id <table_id> --limit 200
+# 使用 bot API 读取已有记录（按字段名，不依赖顺序）
+lark-cli api GET --as bot "/open-apis/bitable/v1/apps/<base_token>/tables/<table_id>/records?limit=200" | jq '.data.items[].fields'
 ```
 
 核心含义相同则跳过。
