@@ -124,7 +124,43 @@ lark-cli docs +create \
   --markdown "<content>"
 ```
 
-**重要：飞书同步是必须执行的步骤，不能跳过。**
+**4. 回填关联文档（必须执行）：**
+
+创建飞书文档后，获取返回的 `doc_url`，然后回填所有本次录音写入的记录。
+
+⚠️ **执行方式：在提取待办/灵感时，记录下写入的记录标题列表，然后通过标题匹配回填**
+
+```bash
+# 假设已保存本次写入的记录标题到变量（在步骤1中记录）
+# 本次_titles 包含所有刚写入记录的标题，用 | 分隔
+# 例如：本次_titles="买新鼠标|开会|复习"
+
+# 使用 bot API 获取记录并回填
+for title in $(echo "$本次_titles" | tr '|' '\n'); do
+  # 通过标题查找 record_id
+  record_id=$(lark-cli api GET --as bot \
+    "/open-apis/bitable/v1/apps/$base_token/tables/$table_id/records?limit=200" | \
+    jq -r ".data.items[] | select(.fields.\"记录标题\" == \"$title\") | .record_id")
+  
+  # 回填关联文档
+  if [ -n "$record_id" ]; then
+    lark-cli base +record-upsert \
+      --base-token $base_token \
+      --table-id $table_id \
+      --record-id "$record_id" \
+      --json "{\"关联文档\": \"$doc_url\"}"
+  fi
+done
+```
+
+**简化方式（如果标题匹配复杂）：**
+
+如果标题匹配困难，可以在步骤1写入记录时保存返回的 record_id（需要改用 API 方式写入），然后在步骤4直接用这些 ID 回填。
+
+**重要：**
+- 飞书同步是必须执行的步骤，不能跳过
+- 回填关联文档是必须执行的步骤，确保记录与文档关联
+- 务必记录下步骤1中写入的所有记录，以便步骤4准确回填
 
 **文档结构（必须详细，不能简略）：**
 
