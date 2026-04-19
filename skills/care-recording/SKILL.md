@@ -88,14 +88,14 @@ lark-cli base +record-upsert \
   --base-token $base_token \
   --table-id $table_id \
   --json '{
-    "记录标题": "<title>",
-    "来源": "录音",
-    "标签": ["<tag>"],
-    "详细内容": "<content>",
-    "创建日期": "<YYYY-MM-DD>",
-    "截止日期": "",
-    "完成状态": "未完成",
-    "关联文档": ""
+    "title": "<title>",
+    "source": "录音",
+    "tags": ["<tag>"],
+    "content": "<content>",
+    "created_date": "<YYYY-MM-DD>",
+    "due_date": "",
+    "status": "未完成",
+    "related_doc": ""
   }'
 ```
 
@@ -146,7 +146,7 @@ for title in $(echo "$本次_titles" | tr '|' '\n'); do
   # 通过标题查找 record_id
   record_id=$(lark-cli api GET --as bot \
     "/open-apis/bitable/v1/apps/$base_token/tables/$table_id/records?limit=200" | \
-    jq -r ".data.items[] | select(.fields.\"记录标题\" == \"$title\") | .record_id")
+    jq -r ".data.items[] | select(.fields.title == \"$title\") | .record_id")
   
   # 回填关联文档
   if [ -n "$record_id" ]; then
@@ -154,7 +154,7 @@ for title in $(echo "$本次_titles" | tr '|' '\n'); do
       --base-token $base_token \
       --table-id $table_id \
       --record-id "$record_id" \
-      --json "{\"关联文档\": \"$doc_url\"}"
+      --json "{\"related_doc\": \"$doc_url\"}"
   fi
 done
 ```
@@ -261,7 +261,7 @@ done
 - 行动要点要具体到可以执行的程度
 - 总体内容要详细到能指导后续行动的程度
 
-创建后回填所有录音记录的 `关联文档` 字段。
+创建后回填所有录音记录的 `related_doc` 字段。
 
 ### 第三层：汇报
 

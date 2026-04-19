@@ -47,14 +47,14 @@ lark-cli api GET --as bot "/open-apis/bitable/v1/apps/<base_token>/tables/<table
 ```json
 {
   "fields": {
-    "记录标题": "标题内容",
-    "标签": ["待办", "技术"],
-    "详细内容": "完整内容",
-    "创建日期": 1775836800000,  // 毫秒时间戳，需转换
-    "完成状态": "未完成",
-    "截止日期": 1775923200000,
-    "来源": "终端",
-    "关联文档": "https://..."
+    "title": "标题内容",
+    "tags": ["待办", "技术"],
+    "content": "完整内容",
+    "created_date": 1775836800000,  // 毫秒时间戳，需转换
+    "status": "未完成",
+    "due_date": 1775923200000,
+    "source": "终端",
+    "related_doc": "https://..."
   },
   "record_id": "recxxxxx"
 }
@@ -63,7 +63,7 @@ lark-cli api GET --as bot "/open-apis/bitable/v1/apps/<base_token>/tables/<table
 **日期转换**：毫秒时间戳 → 日期
 ```bash
 # 在 jq 中转换
-jq '.data.items[] | .fields."创建日期" / 1000 | strftime("%Y-%m-%d")'
+jq '.data.items[] | .fields."created_date" / 1000 | strftime("%Y-%m-%d")'
 ```
 
 同时读文章表。默认最近 7 天，用户可指定范围。

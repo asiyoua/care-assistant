@@ -38,14 +38,14 @@ lark-cli base +record-upsert \
   --base-token <base_token> \
   --table-id <table_id> \
   --json '{
-    "记录标题": "<title>",
-    "来源": "终端",
-    "标签": ["<tag1>","<tag2>"],
-    "详细内容": "<content>",
-    "创建日期": "<YYYY-MM-DD>",
-    "截止日期": "<YYYY-MM-DD 或 \"\">",
-    "完成状态": "未完成",
-    "关联文档": ""
+    "title": "<title>",
+    "source": "终端",
+    "tags": ["<tag1>","<tag2>"],
+    "content": "<content>",
+    "created_date": "<YYYY-MM-DD>",
+    "due_date": "<YYYY-MM-DD 或 \"\">",
+    "status": "未完成",
+    "related_doc": ""
   }'
 ```
 
