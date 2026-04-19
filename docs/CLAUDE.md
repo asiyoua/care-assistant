@@ -15,7 +15,15 @@
 | `references/care-*.md` | 仓库中 skill 的镜像（从 `~/.claude/skills/` 同步） |
 | `~/.care-assistant/config.json` | 运行时配置（base_token, table_id, user_open_id, folder_token） |
 
-**同步规则**：改 skill 时改 `~/.claude/skills/`，提交时同步到 `references/`。
+**同步规则**：改 skill 时改 `~/.claude/skills/`，提交时同步到仓库。
+
+**同步检查脚本**：
+```bash
+# 提交前检查所有 skill 是否已同步
+bash scripts/check-skills-sync.sh
+```
+
+如果检查通过，会显示 "🎉 所有 skill 已同步，可以安全提交"。
 
 ## lark-cli 注意事项
 
