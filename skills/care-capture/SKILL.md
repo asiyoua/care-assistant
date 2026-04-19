@@ -40,7 +40,7 @@ lark-cli base +record-upsert \
   --json '{
     "title": "<title>",
     "source": "终端",
-    "tags": ["<tag1>","<tag2>"],
+    "tag": ["<tag1>","<tag2>"],
     "content": "<content>",
     "created_date": "<YYYY-MM-DD>",
     "due_date": "<YYYY-MM-DD 或 \"\">",

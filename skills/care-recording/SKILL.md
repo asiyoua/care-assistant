@@ -90,7 +90,7 @@ lark-cli base +record-upsert \
   --json '{
     "title": "<title>",
     "source": "录音",
-    "tags": ["<tag>"],
+    "tag": ["<tag>"],
     "content": "<content>",
     "created_date": "<YYYY-MM-DD>",
     "due_date": "",

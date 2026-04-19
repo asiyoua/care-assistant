@@ -48,7 +48,7 @@ lark-cli api GET --as bot "/open-apis/bitable/v1/apps/<base_token>/tables/<table
 {
   "fields": {
     "title": "标题内容",
-    "tags": ["待办", "技术"],
+    "tag": ["待办", "技术"],
     "content": "完整内容",
     "created_date": 1775836800000,  // 毫秒时间戳，需转换
     "status": "未完成",
