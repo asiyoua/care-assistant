@@ -706,3 +706,9 @@ MIT
 **作者**: 胡九思  
 **公众号**: 九思AI歪博  
 **比赛**: [飞书 CLI 创作者大赛](https://waytoagi.feishu.cn/wiki/R4S3w8wTTie04nkYiL6c8rxon4d)
+
+**联系方式**：
+
+| 个人微信 | 公众号 |
+|---------|--------|
+| ![九思二维码](images/jiusi-qrcode.png) | ![九思AI歪博](images/gongzhonghao-qrcode.jpg) |
